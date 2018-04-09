@@ -1,17 +1,17 @@
 <template>
 	<v-ons-page>
-	    <v-ons-toolbar>
-			<div class="center" >Jukebox</div>
-			<v-ons-toolbar-button class="right" ng-click="androidSearchModal.show(); ">
-			  	<v-ons-icon id="icon" icon="md-search" modifier="material"></v-ons-icon>
-			</v-ons-toolbar-button>
-	    </v-ons-toolbar>
+    <v-ons-toolbar >
+        <form v-on:submit.prevent @submit="search" >
+          <v-ons-input id="search" type="search" modifier="transparent" input-id="android-search-input" placeholder="Search for videos in YouTube" v-model="query"></v-ons-input>
+        </form>
+    </v-ons-toolbar>
 
-	    <v-ons-tabbar swipeable position="auto"
-	      :tabs="this.tabs"
-	      :visible="true"
-	    >
-	    </v-ons-tabbar>
+    <v-ons-tabbar swipeable position="auto"
+      :tabs="this.tabs"
+      :visible="true"
+    >
+    </v-ons-tabbar>
+    <modal></modal>
 	</v-ons-page>
 </template>
 
@@ -19,6 +19,7 @@
 
 import Search from './Search'
 import History from './History'
+import Modal from './Modal'
 
 export default {
   name: 'toolBar',
@@ -35,18 +36,22 @@ export default {
           page: History,
           key: "newsPage"
         }
-      ]
+      ],
+      query: ''
     }
   },
   components: {
     Search,
-    History
+    History,
+    Modal
   },
   methods: {
+    search(){
+      console.log(this.query);
+      window.bus.$emit('initSearch', this.query);
+    }
   },
   beforeCreate() {
-    console.log('Android:'+this.$ons.platform.isAndroid());
-    console.log('IOS:'+this.$ons.platform.isIOS());
   }
 }
 </script>
@@ -56,15 +61,26 @@ export default {
 #icon{
 	color: #fff;
 }
-.center{
-	color:white;
-}
 ons-toolbar, #tabbar{
 	width:100%;
 	background-color: #209CEE;
+  height:60px;
 }
-ons{
-	background-color: #209CEE;
+form{
+  display:flex;
+  min-width:100%;
+  flex-wrap: wrap;
+  height:100%;
 }
+#search{
+	width:90%;
+  margin:auto;
+  height:30px;
+}
+</style>
 
+<style>
+#search input{
+  color:white;
+}
 </style>
